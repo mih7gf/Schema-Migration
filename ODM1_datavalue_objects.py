@@ -16,9 +16,6 @@ class Datavalue(object):
 		self.QCID = row[5]
 		self.row = row
 
-# def new_datavalue(row):
-# 	datavalue = Datavalue(row)
-# 	return datavalue
 
 class QualityControlLevel(object):
 	QCID = 0
@@ -27,10 +24,11 @@ class QualityControlLevel(object):
 	row = ""
 
 	def __init__(self, row):
-		self.QCID = QCID
-		self.name = name
-		self.description = description
+		self.QCID = row[0]
+		self.name = row[1]
+		self.description = row[2]
 		self.row = row
+
 
 class Site(object):
 	SiteID = 0
@@ -42,13 +40,14 @@ class Site(object):
 	row = ""
 
 	def __init__(self, row):
-		self.SiteID = SiteID
-		self.SiteCode = SiteCode
-		self.SiteName = SiteName
-		self.SourceOrg = SourceOrg
-		self.Lat = Lat 
-		self.Lon = Lon
+		self.SiteID = row[0]
+		self.SiteCode = row[1]
+		self.SiteName = row[2]
+		self.SourceOrg = row[3]
+		self.Lat = row[4] 
+		self.Lon = row[5]
 		self.row = row
+
 
 class Variable(object):
 	VariableID = 0
@@ -60,11 +59,11 @@ class Variable(object):
 	row = ""
 
 	def __init__(self, row):
-		self.VariableID = VariableID
-		self.VariableCode = VariableCode
-		self.VariableName = VariableName
-		self.VariableDescription = VariableDescription
-		self.Units = Units
-		self.TimeSupport = TimeSupport
+		self.VariableID = row[0]
+		self.VariableCode = row[1]
+		self.VariableName = row[2]
+		self.VariableDescription = row[3]
+		self.Units = row[4]
+		self.TimeSupport = row[5]
 		self.row = row
 
