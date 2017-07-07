@@ -58,7 +58,7 @@ def buffered_parse_large_table():
 	num_rows = 5000023
 	buffer_size = 1000000
 	start = 1
-	sum=0
+
 	while start < num_rows+1:
 		if start+buffer_size <= num_rows:
 			end = start+buffer_size
@@ -66,9 +66,6 @@ def buffered_parse_large_table():
 			end = num_rows+1
 
 		rows = get_rows_in_range(tables[0][0], tables[0][1], start, end)
-		# len_rows = len(rows)	# exit()
-	
-		sum+=len(rows)
 		dval_objs = []
 		for r in rows:
 			dval_objs.append(r)
