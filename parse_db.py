@@ -47,32 +47,37 @@ def parse_small_tables():
 big_list = []
 #### Still Working on this function.
 def buffered_parse_large_table():
+	list = []
 	num_rows = int(c.execute('SELECT * FROM {tn} ORDER BY ROWID DESC LIMIT 1'.format(tn=tables[0][0])).fetchone()[0])
-	num_rows = 100
-	buffer_size = 3
-	for i in range(1, num_rows+1):
-		if(i%buffer_size==0):
-			start = i-buffer_size+1
-			end = i
-			if(i==buffer_size*(num_rows/buffer_size)):
-				end = num_rows
-			print "doing",start,"to",end
-			list = []
-			rows = get_rows_in_range(tables[0][0], tables[0][1], start, end+1)
-
-			for row in rows:
-				if(row!=None):
-					list.append(Datavalue(row))
-					print(row)
-				else:
-					print("None")
-			print "littleList",len(list)
-			big_list.append(list)
-			print "bigList",len(big_list)
+	num_rows = 1000000
+	buffer_size = 10
+	start = 1
+	total = num_rows-start+1
+	
+	sum=0
+	while start < num_rows+1:
+		if start+buffer_size <= num_rows:
+			end = start+buffer_size
+		else:
+			end = num_rows+1
+		rows = get_rows_in_range(tables[0][0], tables[0][1], start, end)
+		if len(rows)<buffer_size:
 			print
-			continue
-		
-	print "Datavalues parsed..."
+			for r in rows:
+				print(r)
+			# print len(rows)
+			print"rows size decreased: ",start,end,len(rows)
+			
+			exit()
+		print(start,end,len(rows))
+		sum+=len(rows)
+		for r in rows:
+			list.append(r)
+		start = end
+
+	print("complete")
+	print(total,len(list))
+	# print "Datavalues parsed..."
 
 
 
@@ -83,14 +88,7 @@ variable_objs = []
 
 parse_small_tables()
 buffered_parse_large_table()
-print "Completed"
-print "len_big_list",len(big_list)
+# print "Completed"
 
-sum = 0
-for l in big_list:
-	print "len",len(l)
-	sum+=len(l)
-
-print "sum",sum
 
 conn.close()
