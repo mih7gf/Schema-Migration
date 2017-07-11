@@ -70,10 +70,10 @@ class SiteType(object):
 ####
 
 class Core_Organization(object):
-	OrganizationID = 'null'
-	OrganizationTypeCV = 'null'
-	OrganizationCode = 'null'
-	OrganizationName = 'null'
+	OrganizationID = 'null' #Not Null
+	OrganizationTypeCV = 'null' #Not Null
+	OrganizationCode = 'null' #Not Null
+	OrganizationName = 'null' #Not Null
 	OrganizationDescription = 'null'
 	OrganizationLink = 'null'
 	ParentOrganizationID = 'null'
