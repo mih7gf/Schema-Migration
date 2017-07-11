@@ -18,14 +18,24 @@ def migrate_QCL(QCL):
 	return
 
 def migrate_site(site):
-	s = SamplingFeatures_Sites(site)
-	c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s.SamplingFeatureID, cv=s.SiteTypeCV, lt=s.Latitude, ln=s.Longitude, ssrid=s.SpatialReferenceID))
-
-
+	s = SamplingFeatures_Site(site)
+	s2 = SamplingFeature(site)
+	#-c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s.SamplingFeatureID, cv=s.SiteTypeCV, lt=s.Latitude, ln=s.Longitude, srid=s.SpatialReferenceID))
+	c2.execute("INSERT INTO SamplingFeatures VALUES ({id}, '{uid}', '{tp}', '{cd}', '{nm}', '{ds}', '{gt}', '{gm}', '{gmw}', '{em}', '{ed}')".format(id=s2.SamplingFeatureID, uid=s2.SamplingFeatureUUID, tp=s2.SamplingFeatureTypeCV, cd=s2.SamplingFeatureCode, nm=s2.SamplingFeatureName, ds=s2.SamplingFeatureDescription, gt=s2.FeatureGeometry, gm=s2.FeatureGeometry ,gmw=s2.FeatureGeometryWKT, em=s2.Elevation_m, ed=s2.ElevationDatumCV))
+	conn2.commit()
 	return
 
 def migrate_variable(var):
 
 	return
 
+def Spatial_Reference_setup():
+	sr = SpatialReference(1,"WGS84")
+	c2.execute("INSERT INTO SpatialReferences VALUES ({id}, '{src}','{nm}', '{ds}','{lk}')".format(id=sr.SpatialReferenceID, src=sr.SRSCode, nm=sr.SRSName, ds=sr.SRSDescription, lk=sr.SRSLink))
+	conn2.commit()
 
+def CV_SiteType_setup():
+	cv = SiteType('Sensor Site')
+	c2.execute("INSERT INTO CV_SiteType VALUES ('{t}', '{n}','{d}', '{c}','{s}')".format(t=cv.Term, n=cv.Name, d=cv.Definition, c=cv.Category, s=cv.SourceVocabularyURI))
+	conn2.commit()
+	
