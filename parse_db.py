@@ -1,5 +1,6 @@
 import sqlite3
 from ODM1_table_objects import *
+from ODM2_table_objects import *
 from migrate_db import *
 
 sqlite_file = '../hampt_rd_data.sqlite'
@@ -36,15 +37,19 @@ def parse_small_tables():
 	print "Migrating QCL..."
 	for row in QCL_rows:
 		# QCL_objs.append(QualityControlLevel(row))
-		migrate_QCL(QualityControlLevel(row))
+		q = QualityControlLevel(row)
+		#-migrate_QCL(q)
 	print "Done\n"
 	
 	print "Fetching Sites..."
 	site_rows = get_all_rows(tables[2][0])
 	print "Migrating Sites..."
+	#-Spatial_Reference_setup()
+	#-CV_SiteType_setup()
 	for row in site_rows:
 		# site_objs.append(Site(row))
-		migrate_site(Site(row))
+		s = Site(row)
+		migrate_site(s)
 	print "Done\n"
 
 	print "Fetching Variables..."
@@ -52,9 +57,12 @@ def parse_small_tables():
 	print "Migrating Variables..."
 	for row in variable_rows:
 		# variable_objs.append(Variable(row))
-		migrate_variable(Variable(row))
+		v = Variable(row)
+		migrate_variable(v)
 	print "Done\n"
+	conn2.commit()
 	return
+
 
 def buffered_parse_large_table():
 	
@@ -82,13 +90,14 @@ def buffered_parse_large_table():
 	print "Done"
 	return
 
-dval_objs = []
-QCL_objs = []
-site_objs = []
-variable_objs = []
+# dval_objs = []
+# QCL_objs = []
+# site_objs = []
+# variable_objs = []
 
 parse_small_tables()
-buffered_parse_large_table()
+# buffered_parse_large_table()
 
 print "\nMigration Complete"
 conn.close()
+conn2.close()
