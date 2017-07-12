@@ -49,7 +49,7 @@ def parse_small_tables():
 	for row in site_rows:
 		# site_objs.append(Site(row))
 		s = Site(row)
-		migrate_site(s)
+		#- migrate_site(s)
 	print "Done\n"
 
 	print "Fetching Variables..."
@@ -95,6 +95,7 @@ def buffered_parse_large_table():
 # site_objs = []
 # variable_objs = []
 
+#- Organization_setup()
 parse_small_tables()
 # buffered_parse_large_table()
 
