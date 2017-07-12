@@ -26,16 +26,29 @@ def migrate_site(site):
 	return
 
 def migrate_variable(var):
-
+	v = Core_Variable(var)
+	c2.execute("INSERT INTO Variables VALUES ({id}, '{cv}', '{c}', '{n}', '{d}', '{s}', {ndv})".format(id=v.VariableID, cv=v.VariableTypeCV, c=v.VariableCode, n=v.VariableNameCV, d=v.VariableDefinition, s=v.SpeciationDV, ndv=v.NoDataValue))
+	conn2.commit()
 	return
 
 def Spatial_Reference_setup():
 	sr = SpatialReference(1,"WGS84")
 	c2.execute("INSERT INTO SpatialReferences VALUES ({id}, '{src}','{nm}', '{ds}','{lk}')".format(id=sr.SpatialReferenceID, src=sr.SRSCode, nm=sr.SRSName, ds=sr.SRSDescription, lk=sr.SRSLink))
 	conn2.commit()
+	return
 
 def CV_SiteType_setup():
 	cv = SiteType('Sensor Site')
 	c2.execute("INSERT INTO CV_SiteType VALUES ('{t}', '{n}','{d}', '{c}','{s}')".format(t=cv.Term, n=cv.Name, d=cv.Definition, c=cv.Category, s=cv.SourceVocabularyURI))
 	conn2.commit()
-	
+	return
+
+def Organization_setup():
+	o1 = Core_Organization(1, 'Unknown', '1', 'HRSD')
+	o2 = Core_Organization(2, 'Unknown', '2', 'NOAA')
+	o3 = Core_Organization(3, 'Unknown', '3', 'WU')
+	orgs = [o1, o2, o3] 
+	for org in orgs:
+		c2.execute("INSERT INTO Organizations VALUES ({i}, '{t}','{c}', '{n}','{d}', '{l}', {p})".format(i=org.OrganizationID, t=org.OrganizationTypeCV, c=org.OrganizationCode, n=org.OrganizationName, d=org.OrganizationDescription, l=org.OrganizationLink, p=org.ParentOrganizationID))
+	conn2.commit()
+	return
