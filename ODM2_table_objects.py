@@ -68,7 +68,6 @@ class SiteType(object):
 		self.Name = s
 
 ####
-
 class Core_Organization(object):
 	OrganizationID = 'null' #Not Null
 	OrganizationTypeCV = 'null' #Not Null
@@ -77,8 +76,45 @@ class Core_Organization(object):
 	OrganizationDescription = 'null'
 	OrganizationLink = 'null'
 	ParentOrganizationID = 'null'
-	# def __init__(self):
+	def __init__(self, i, t, c, n):
+		self.OrganizationID = i
+		self.OrganizationTypeCV = t
+		self.OrganizationCode = c
+		self.OrganizationName = n
 
+
+
+class Core_Variable(object):
+	VariableID = 'null' #Not Null
+	VariableTypeCV = 'null' #Not Null
+	VariableCode = 'null' #Not Null
+	VariableNameCV = 'null' #Not Null
+	VariableDefinition = 'null'
+	SpeciationDV = 'null'
+	NoDataValue = 'null' #Not Null
+	def __init__(self, var):
+		self.VariableID = var.VariableID
+		self.VariableTypeCV = 'Unknown'
+		self.VariableCode = var.VariableCode
+		self.VariableNameCV = var.VariableName
+		self.VariableDefinition = var.VariableDescription
+		self.SpeciationDV = 'Unknown'
+		self.NoDataValue = 0
+	
+class Unit(object):
+	UnitID = 'null' #Not Null
+	UnitTypeCV = 'null' #Not Null
+	UnitAbbreviation = 'null' #Not Null
+	UnitName = 'null' #Not Null
+	UnitLink = 'null' 
+	def __init__(self, ID, ty, ab, name):
+		self.UnitID = ID
+		self.UnitTypeCV = ty
+		self.UnitAbbreviation = ab
+		self.UnitName = name
+		self.UnitLink = "Unknown"
+
+		
 class Core_Method(object):
 	MethodID = 'null' #Not Null
 	MethodTypeCV = 'null' #Not Null
@@ -87,8 +123,16 @@ class Core_Method(object):
 	MethodDescription = 'null'
 	MethodLink = 'null'
 	OrganizationID = 'null'
-	# def __init__(self):
-	
+	def __init__(self, ID):
+		self.MethodID = ID
+		self.MethodTypeCV = "Instrument deployment"
+		self.MethodCode = ID
+		self.MethodName = "raw QC level 0 data"
+		self.MethodDescription = "raw QC level 0 data"
+		self.MethodLink = "Unknown"
+		self.OrganizationID = ID
+
+####	
 class Core_Action(object):
 	ActionID = 'null' #Not Null
 	ActionTypeCV = 'null' #Not Null
@@ -107,19 +151,6 @@ class Core_FeatureAction(object):
 	ActionID = 'null'
 	# def __init__(self):
 	
-class Core_Variable(object):
-	VariableID = 'null' #Not Null
-	VariableTypeCV = 'null' #Not Null
-	VariableCode = 'null' #Not Null
-	VariableNameCV = 'null' #Not Null
-	VariableDefinition = 'null'
-	SpeciationDV = 'null'
-	NoDataValue = 'null' #Not Null
-	# def __init__(self):
-	
-class Units(object):
-	
-	# def __init__(self):
 	
 class Results_TimeSeriesResultValue(object):
 	ValueID = 'null' #Not Null
