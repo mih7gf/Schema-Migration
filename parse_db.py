@@ -96,8 +96,10 @@ def buffered_parse_large_table():
 # variable_objs = []
 
 #- Organization_setup()
-parse_small_tables()
-# buffered_parse_large_table()
+#- Unit_setup()
+#- Method_setup()
+#- parse_small_tables()
+#- buffered_parse_large_table()
 
 print "\nMigration Complete"
 conn.close()
