@@ -143,8 +143,23 @@ class Core_Action(object):
 	EndDateTimeUTCOffset = 'null'
 	ActionDescription = 'null'
 	ActionFileLink = 'null'
-	# def __init__(self):
-	
+	def __init__(self, site):
+		self.ActionID = site.SiteID
+		self.ActionTypeCV = "Observation"
+		if(site.SiteID==22): # WU
+			self.MethodID = 3
+		elif(site.SiteID>=17 && site.SiteID<=20):
+			self.MethodID = 2 # NOAA
+		elif(site.SiteID<=22):
+			self.MethodID==1 # HRSD
+		else:
+			self.MethodID = 0 # else
+		self.BeginDateTime
+		self.BeginDateTimeUTCOffset = -5
+		self.EndDateTime
+		self.EndDateTimeUTCOffset = -5
+		self.ActionDescription
+		self.ActionFileLink
 class Core_FeatureAction(object):
 	FeatureActionID = 'null'
 	SamplingFeatureID = 'null'
