@@ -18,9 +18,9 @@ def migrate_QCL(QCL):
 	return
 
 def migrate_site(site):
-	s = SamplingFeatures_Site(site)
+	s1 = SamplingFeatures_Site(site)
 	s2 = SamplingFeature(site)
-	#-c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s.SamplingFeatureID, cv=s.SiteTypeCV, lt=s.Latitude, ln=s.Longitude, srid=s.SpatialReferenceID))
+	#-c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s1.SamplingFeatureID, cv=s1.SiteTypeCV, lt=s1.Latitude, ln=s1.Longitude, srid=s1.SpatialReferenceID))
 	c2.execute("INSERT INTO SamplingFeatures VALUES ({id}, '{uid}', '{tp}', '{cd}', '{nm}', '{ds}', '{gt}', '{gm}', '{gmw}', '{em}', '{ed}')".format(id=s2.SamplingFeatureID, uid=s2.SamplingFeatureUUID, tp=s2.SamplingFeatureTypeCV, cd=s2.SamplingFeatureCode, nm=s2.SamplingFeatureName, ds=s2.SamplingFeatureDescription, gt=s2.FeatureGeometry, gm=s2.FeatureGeometry ,gmw=s2.FeatureGeometryWKT, em=s2.Elevation_m, ed=s2.ElevationDatumCV))
 	conn2.commit()
 	return
@@ -52,3 +52,24 @@ def Organization_setup():
 		c2.execute("INSERT INTO Organizations VALUES ({i}, '{t}','{c}', '{n}','{d}', '{l}', {p})".format(i=org.OrganizationID, t=org.OrganizationTypeCV, c=org.OrganizationCode, n=org.OrganizationName, d=org.OrganizationDescription, l=org.OrganizationLink, p=org.ParentOrganizationID))
 	conn2.commit()
 	return
+def Unit_setup():
+	u1 = Unit(1, 'Length', 'in', 'inches')
+	u2 = Unit(2, 'Temperature', 'deg', 'degrees')
+	u3 = Unit(3, 'Speed', 'mph', 'miles per hour')
+	u4 = Unit(4, 'Length', 'ft', 'feet')
+	units = [u1, u2, u3, u4]
+	for unit in units:
+		c2.execute("INSERT INTO Units VALUES ({id})".format(id=unit.UnitID))
+	conn2.commit()
+
+def Method_setup():
+	m1 = Core_Method(1)
+	m2 = Core_Method(2)
+	m3 = Core_Method(3)
+	m4 = Core_Method(4)
+	methods = [m1, m2, m3, m4]
+	for method in methods:
+		c2.execute("INSERT INTO Methods VALUES ({id}, '{cv}', '{cd}', '{nm}', '{ds}', '{ln}', {org})".format(id=method.MethodID, cv=method.MethodTypeCV, cd=method.MethodCode, nm=method.MethodName, ds=method.MethodDescription, org=method.OrganizationID, ln=method.MethodLink))
+	conn2.commit()
+
+	# "raw QC level 0 data"
