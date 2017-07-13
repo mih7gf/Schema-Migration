@@ -1,4 +1,10 @@
 from ODM1_table_objects import *
+# from parse_db import *
+
+
+
+
+
 
 class Core_ProcessingLevel(object):
 	ProcessingLevelID = 0
@@ -67,7 +73,7 @@ class SiteType(object):
 		self.Term = s
 		self.Name = s
 
-####
+
 class Core_Organization(object):
 	OrganizationID = 'null' #Not Null
 	OrganizationTypeCV = 'null' #Not Null
@@ -133,6 +139,7 @@ class Core_Method(object):
 		self.OrganizationID = ID
 
 ####	
+####
 class Core_Action(object):
 	ActionID = 'null' #Not Null
 	ActionTypeCV = 'null' #Not Null
@@ -148,13 +155,14 @@ class Core_Action(object):
 		self.ActionTypeCV = "Observation"
 		if(site.SiteID==22): # WU
 			self.MethodID = 3
-		elif(site.SiteID>=17 && site.SiteID<=20):
+		elif(site.SiteID>=17 and site.SiteID<=20):
 			self.MethodID = 2 # NOAA
 		elif(site.SiteID<=22):
 			self.MethodID==1 # HRSD
 		else:
 			self.MethodID = 0 # else
-		self.BeginDateTime
+	
+		self.BeginDateTime = site.SiteID
 		self.BeginDateTimeUTCOffset = -5
 		self.EndDateTime
 		self.EndDateTimeUTCOffset = -5
