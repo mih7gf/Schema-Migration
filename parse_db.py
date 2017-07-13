@@ -15,7 +15,6 @@ tables = [ #[table_name, pk_column_name]
 ]
 
 
-
 def get_all_rows(table_name):
 	c.execute('SELECT * FROM {tn}'.format(tn=table_name))
 	all_rows = c.fetchall()
@@ -30,6 +29,16 @@ def get_row_by_pk(table_name, pk_name, row):
 	c.execute('SELECT * FROM {tn} WHERE {cn}=={ro}'.format(tn=table_name, cn=pk_name, ro=row))
 	one_row = c.fetchone()
 	return one_row
+
+def begin_datetime(siteID):
+	c.execute("SELECT * FROM datavalues WHERE SiteID={id} ORDER BY Datetime LIMIT 1".format(id=siteID))
+	start = c.fetchone()
+	return start[2]
+
+def end_datetime(siteID):
+	c.execute ("SELECT * FROM datavalues WHERE SiteID={id} ORDER BY Datetime DESC LIMIT 1".format(id=siteID))
+	end = c.fetchone()
+	return end[2]
 
 def parse_small_tables():
 	print "Fetching QCL..."
@@ -50,6 +59,7 @@ def parse_small_tables():
 		# site_objs.append(Site(row))
 		s = Site(row)
 		#- migrate_site(s)
+		# if(s.SiteName==
 	print "Done\n"
 
 	print "Fetching Variables..."
@@ -100,6 +110,48 @@ def buffered_parse_large_table():
 #- Method_setup()
 #- parse_small_tables()
 #- buffered_parse_large_table()
+# total = []
+# pair = []
+# # def start_end(sid):
+# 	first=c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=sid))
+# 	first = c.fetchone()
+# 	firstID = first[0]
+
+# 	nxt = c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=sid+1))
+# 	nxt = c.fetchone()
+# 	nxtID = nxt[0]
+# 	last=c.execute("SELECT * FROM  datavalues WHERE ValueID={id}".format(id=nxtID-1))
+# 	last = c.fetchone()
+# 	if last==None:
+# 		last=c.execute("SELECT * FROM  datavalues WHERE ValueID={id}".format(id=nxtID-2))
+# 		last = c.fetchone()
+# 	# start2 = c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=sid+1))
+# 	# r1 = c.fetchone()
+# 	# ID2 = int(r1[0])-1
+# 	# end = c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=ID2))
+# 	# end2 = c.fetchone()
+# 	print sid
+# 	print first
+# 	print last
+# 	# print end2
+# 	print
+
+# for i in range(1,23):
+# 	print i,",",begin_datetime(i),',',end_datetime(i)
+import json
+import sys
+import csv
+
+# with open('start_end.csv', 'rb') as csvfile:
+	# file = csv.reader(csvfile, delimiter=',', quotechar='|')
+for row in csv.DictReader("start_end.csv"):
+	# print row
+	json.dump(row,sys.stdout)
+
+ # with open('start_end.csv', 'rb') as csvfile:
+# 	file = csv.reader(csvfile, delimiter=',', quotechar='|')
+# 	for row in file:
+# 		print row
 
 print "\nMigration Complete"
 conn.close()
