@@ -26,8 +26,8 @@ def migrate_site(site):
 	migrate_Action(site)
 	migrate_FeatureAction()
 
-	c2.execute("INSERT INTO Actions VALUES ()"format())
-	c2.execute("INSERT INTO FeatureActions VALUES ()"format())
+	# c2.execute("INSERT INTO Actions VALUES ()"format())
+	# c2.execute("INSERT INTO FeatureActions VALUES ()"format())
 	conn2.commit()
 	return
 
