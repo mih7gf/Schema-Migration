@@ -14,6 +14,7 @@ tables = [ #[table_name, pk_column_name]
 	['variables', 'VariableID']
 ]
 
+start_end = []
 
 def get_all_rows(table_name):
 	c.execute('SELECT * FROM {tn}'.format(tn=table_name))
@@ -40,6 +41,13 @@ def end_datetime(siteID):
 	end = c.fetchone()
 	return end[2]
 
+def start_end_datetime():
+	start_end.append(['null',"null","null"])
+	with open('start_end.csv', 'rb') as csvfile:
+		file = csv.reader(csvfile, delimiter=',', quotechar='|')
+		for row in file:
+			start_end.append(row)
+
 def parse_small_tables():
 	print "Fetching QCL..."
 	QCL_rows = get_all_rows(tables[1][0])	
@@ -58,8 +66,8 @@ def parse_small_tables():
 	for row in site_rows:
 		# site_objs.append(Site(row))
 		s = Site(row)
-		#- migrate_site(s)
-		# if(s.SiteName==
+		migrate_site(s)
+		
 	print "Done\n"
 
 	print "Fetching Variables..."
@@ -68,7 +76,7 @@ def parse_small_tables():
 	for row in variable_rows:
 		# variable_objs.append(Variable(row))
 		v = Variable(row)
-		migrate_variable(v)
+		#- migrate_variable(v)
 	print "Done\n"
 	conn2.commit()
 	return
@@ -108,33 +116,11 @@ def buffered_parse_large_table():
 #- Organization_setup()
 #- Unit_setup()
 #- Method_setup()
-#- parse_small_tables()
+parse_small_tables()
 #- buffered_parse_large_table()
 # total = []
 # pair = []
-# # def start_end(sid):
-# 	first=c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=sid))
-# 	first = c.fetchone()
-# 	firstID = first[0]
 
-# 	nxt = c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=sid+1))
-# 	nxt = c.fetchone()
-# 	nxtID = nxt[0]
-# 	last=c.execute("SELECT * FROM  datavalues WHERE ValueID={id}".format(id=nxtID-1))
-# 	last = c.fetchone()
-# 	if last==None:
-# 		last=c.execute("SELECT * FROM  datavalues WHERE ValueID={id}".format(id=nxtID-2))
-# 		last = c.fetchone()
-# 	# start2 = c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=sid+1))
-# 	# r1 = c.fetchone()
-# 	# ID2 = int(r1[0])-1
-# 	# end = c.execute("SELECT * FROM  datavalues WHERE SiteID={id} LIMIT 1".format(id=ID2))
-# 	# end2 = c.fetchone()
-# 	print sid
-# 	print first
-# 	print last
-# 	# print end2
-# 	print
 
 # for i in range(1,23):
 # 	print i,",",begin_datetime(i),',',end_datetime(i)
@@ -143,15 +129,15 @@ import sys
 import csv
 
 # with open('start_end.csv', 'rb') as csvfile:
-	# file = csv.reader(csvfile, delimiter=',', quotechar='|')
-for row in csv.DictReader("start_end.csv"):
-	# print row
-	json.dump(row,sys.stdout)
-
- # with open('start_end.csv', 'rb') as csvfile:
+# 	# file = csv.reader(csvfile, delimiter=',', quotechar='|')
 # 	file = csv.reader(csvfile, delimiter=',', quotechar='|')
-# 	for row in file:
-# 		print row
+
+# 	for row in csv.DictReader(file):
+# 		# print row
+# 		json.dump(row,sys.stdout)
+
+
+print start_end
 
 print "\nMigration Complete"
 conn.close()

@@ -1,10 +1,5 @@
 from ODM1_table_objects import *
-# from parse_db import *
-
-
-
-
-
+from parse_db import start_end
 
 class Core_ProcessingLevel(object):
 	ProcessingLevelID = 0
@@ -162,12 +157,12 @@ class Core_Action(object):
 		else:
 			self.MethodID = 0 # else
 	
-		self.BeginDateTime = site.SiteID
+		self.BeginDateTime = start_end[site.Site][1]
 		self.BeginDateTimeUTCOffset = -5
-		self.EndDateTime
+		self.EndDateTime = start_end[site.Site][2]
 		self.EndDateTimeUTCOffset = -5
-		self.ActionDescription
-		self.ActionFileLink
+		# self.ActionDescription
+		# self.ActionFileLink
 class Core_FeatureAction(object):
 	FeatureActionID = 'null'
 	SamplingFeatureID = 'null'

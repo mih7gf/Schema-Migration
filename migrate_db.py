@@ -21,8 +21,8 @@ def migrate_site(site):
 	s1 = SamplingFeatures_Site(site)
 	s2 = SamplingFeature(site)
 	# s3 = FeatureAction(site)
-	c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s1.SamplingFeatureID, cv=s1.SiteTypeCV, lt=s1.Latitude, ln=s1.Longitude, srid=s1.SpatialReferenceID))
-	c2.execute("INSERT INTO SamplingFeatures VALUES ({id}, '{uid}', '{tp}', '{cd}', '{nm}', '{ds}', '{gt}', '{gm}', '{gmw}', '{em}', '{ed}')".format(id=s2.SamplingFeatureID, uid=s2.SamplingFeatureUUID, tp=s2.SamplingFeatureTypeCV, cd=s2.SamplingFeatureCode, nm=s2.SamplingFeatureName, ds=s2.SamplingFeatureDescription, gt=s2.FeatureGeometry, gm=s2.FeatureGeometry ,gmw=s2.FeatureGeometryWKT, em=s2.Elevation_m, ed=s2.ElevationDatumCV))
+	#- c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s1.SamplingFeatureID, cv=s1.SiteTypeCV, lt=s1.Latitude, ln=s1.Longitude, srid=s1.SpatialReferenceID))
+	#- c2.execute("INSERT INTO SamplingFeatures VALUES ({id}, '{uid}', '{tp}', '{cd}', '{nm}', '{ds}', '{gt}', '{gm}', '{gmw}', '{em}', '{ed}')".format(id=s2.SamplingFeatureID, uid=s2.SamplingFeatureUUID, tp=s2.SamplingFeatureTypeCV, cd=s2.SamplingFeatureCode, nm=s2.SamplingFeatureName, ds=s2.SamplingFeatureDescription, gt=s2.FeatureGeometry, gm=s2.FeatureGeometry ,gmw=s2.FeatureGeometryWKT, em=s2.Elevation_m, ed=s2.ElevationDatumCV))
 	migrate_Action(site)
 	migrate_FeatureAction()
 
@@ -37,9 +37,9 @@ def migrate_variable(var):
 	conn2.commit()
 	return
 
-def migrate_Action():
-	a = Core_Action()
-
+def migrate_Action(site):
+	a = Core_Action(site)
+	c2.execute("INSERT INTO Actions VALUES ({id}, {cv}, {mid}, {bdt}, {bos}, {edt}, {eos}, {ad}, {afl})".format(id=a.ActionID, cv=a.ActionTypeCV, mid=a.MethodID, bdt=a.BeginDateTime, bos=a.BeginDateTimeUTCOffset, edt=a.EndDateTime, eos=a.EndDateTimeUTCOffset, ad=a.ActionDescription, afl=a.ActionFileLink))
 	conn2.commit()
 	return
 
