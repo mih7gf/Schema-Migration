@@ -38,18 +38,18 @@ def parse_small_tables():
 	for row in QCL_rows:
 		# QCL_objs.append(QualityControlLevel(row))
 		q = QualityControlLevel(row)
-		#-migrate_QCL(q)
+		migrate_QCL(q) #-
 	print "Done\n"
 	
 	print "Fetching Sites..."
 	site_rows = get_all_rows(tables[2][0])
 	print "Migrating Sites..."
-	#-Spatial_Reference_setup()
-	#-CV_SiteType_setup()
+	Spatial_Reference_setup()#-
+	CV_SiteType_setup()#-
 	for row in site_rows:
 		# site_objs.append(Site(row))
 		s = Site(row)
-		#- migrate_site(s)
+		migrate_site(s)#- 
 	print "Done\n"
 
 	print "Fetching Variables..."
@@ -95,10 +95,13 @@ def buffered_parse_large_table():
 # site_objs = []
 # variable_objs = []
 
-#- Organization_setup()
-#- Unit_setup()
+#-Organization_setup()
+print "done Org_setlup"
+#-Unit_setup()
+print "done unit_setup"
 #- Method_setup()
-#- parse_small_tables()
+print "done Method_setup"
+parse_small_tables()
 #- buffered_parse_large_table()
 
 print "\nMigration Complete"

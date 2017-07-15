@@ -191,3 +191,4 @@ class Core_Result(object):
 	SampledMedium = 'null' #Not Null
 	ValueCount = 'null' #Not Null
 	# def __init__(self):
+	#kdjfkdj

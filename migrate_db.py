@@ -20,7 +20,7 @@ def migrate_QCL(QCL):
 def migrate_site(site):
 	s1 = SamplingFeatures_Site(site)
 	s2 = SamplingFeature(site)
-	#-c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s1.SamplingFeatureID, cv=s1.SiteTypeCV, lt=s1.Latitude, ln=s1.Longitude, srid=s1.SpatialReferenceID))
+	c2.execute("INSERT INTO Sites VALUES ({sfid},'{cv}',{lt},'{ln}', {srid})".format(sfid=s1.SamplingFeatureID, cv=s1.SiteTypeCV, lt=s1.Latitude, ln=s1.Longitude, srid=s1.SpatialReferenceID))#-
 	c2.execute("INSERT INTO SamplingFeatures VALUES ({id}, '{uid}', '{tp}', '{cd}', '{nm}', '{ds}', '{gt}', '{gm}', '{gmw}', '{em}', '{ed}')".format(id=s2.SamplingFeatureID, uid=s2.SamplingFeatureUUID, tp=s2.SamplingFeatureTypeCV, cd=s2.SamplingFeatureCode, nm=s2.SamplingFeatureName, ds=s2.SamplingFeatureDescription, gt=s2.FeatureGeometry, gm=s2.FeatureGeometry ,gmw=s2.FeatureGeometryWKT, em=s2.Elevation_m, ed=s2.ElevationDatumCV))
 	conn2.commit()
 	return
@@ -35,6 +35,7 @@ def Spatial_Reference_setup():
 	sr = SpatialReference(1,"WGS84")
 	c2.execute("INSERT INTO SpatialReferences VALUES ({id}, '{src}','{nm}', '{ds}','{lk}')".format(id=sr.SpatialReferenceID, src=sr.SRSCode, nm=sr.SRSName, ds=sr.SRSDescription, lk=sr.SRSLink))
 	conn2.commit()
+	print"spacial_ref_setup"
 	return
 
 def CV_SiteType_setup():
@@ -59,7 +60,7 @@ def Unit_setup():
 	u4 = Unit(4, 'Length', 'ft', 'feet')
 	units = [u1, u2, u3, u4]
 	for unit in units:
-		c2.execute("INSERT INTO Units VALUES ({id})".format(id=unit.UnitID))
+		c2.execute("INSERT INTO Units VALUES ({id}, '{cv}', '{ab}', '{nm}', '{lk}')".format(id=unit.UnitID, cv=unit.UnitTypeCV, ab=unit.UnitAbbreviation, nm=unit.UnitAbbreviation, lk=unit.UnitLink))
 	conn2.commit()
 
 def Method_setup():
