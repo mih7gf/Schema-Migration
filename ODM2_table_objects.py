@@ -1,4 +1,5 @@
 from ODM1_table_objects import *
+from parse_db import start_end
 
 class Core_ProcessingLevel(object):
 	ProcessingLevelID = 0
@@ -147,10 +148,10 @@ class Core_Action(object):
 		self.ActionID = site.SiteID
 		self.ActionTypeCV = "Observation"
 		self.MethodID = method_id(site.SiteID)
-		self.BeginDateTime = "a"
-		self.BeginDateTimeUTCOffset = "b"
-		self.EndDateTime = "c"
-		self.EndDateTimeUTCOffset = "d"
+		self.BeginDateTime = start_end[site.SiteID][1]
+		self.BeginDateTimeUTCOffset = -5
+		self.EndDateTime = start_end[site.SiteID][2]
+		self.EndDateTimeUTCOffset = -5
 def method_id(s):
 	if(s==22): #WU
 		return 3

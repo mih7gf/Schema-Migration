@@ -1,7 +1,8 @@
-import sqlite3
+import sqlite3, csv
 from ODM1_table_objects import *
 from ODM2_table_objects import *
 from migrate_db import *
+
 
 sqlite_file = '../hampt_rd_data.sqlite'
 conn = sqlite3.connect(sqlite_file)
@@ -14,7 +15,7 @@ tables = [ #[table_name, pk_column_name]
 	['variables', 'VariableID']
 ]
 
-
+start_end = []
 
 def get_all_rows(table_name):
 	c.execute('SELECT * FROM {tn}'.format(tn=table_name))
@@ -30,6 +31,23 @@ def get_row_by_pk(table_name, pk_name, row):
 	c.execute('SELECT * FROM {tn} WHERE {cn}=={ro}'.format(tn=table_name, cn=pk_name, ro=row))
 	one_row = c.fetchone()
 	return one_row
+
+def begin_datetime(siteID):
+	c.execute("SELECT * FROM datavalues WHERE SiteID={id} ORDER BY Datetime LIMIT 1".format(id=siteID))
+	start = c.fetchone()
+	return start[2]
+
+def end_datetime(siteID):
+	c.execute("SELECT * FROM datavalues WHERE SiteID={id} ORDER BY Datetime DESC LIMIT 1".format(id=siteID))
+	end = c.fetchone()
+	return end[2]
+
+def start_end_datetime_setup():
+	start_end.append(['null','null','null'])
+	with open('start_end.csv', 'rb') as csvfile:
+		file = csv.reader(csvfile, delimiter=',', quotechar='|')
+		for row in file:
+			start_end.append(row)
 
 def parse_small_tables():
 	print "Fetching QCL..."
@@ -94,6 +112,7 @@ def buffered_parse_large_table():
 # QCL_objs = []
 # site_objs = []
 # variable_objs = []
+start_end_datetime_setup()
 Spatial_Reference_setup()#-
 print "done sp_ref_setup"
 CV_SiteType_setup()#-

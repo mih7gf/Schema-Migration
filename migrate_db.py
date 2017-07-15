@@ -28,7 +28,7 @@ def migrate_site(site):
 
 def migrate_Action(site):
 	a = Core_Action(site)
-	print a.ActionID,a.MethodID, a.BeginDateTime
+	print a.ActionID,a.MethodID, a.BeginDateTime, a.EndDateTime
 	c2.execute("INSERT INTO Actions Values ({id}, '{cv}', {mid}, '{bdt}', '{bos}', '{edt}', '{eod}', '{ad}', '{afl}')".format(id=a.ActionID, cv=a.ActionTypeCV, mid=a.MethodID, bdt=a.BeginDateTime, bos=a.BeginDateTimeUTCOffset, edt=a.EndDateTime, eod=a.EndDateTimeUTCOffset, ad=a.ActionDescription, afl=a.ActionFileLink))
 	conn2.commit()
 	print"migrate action completed"
