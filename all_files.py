@@ -21,19 +21,6 @@ start_end = []
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ###################DOM1
 class Datavalue(object):
 	ValueID = 0
@@ -279,9 +266,11 @@ class Core_FeatureAction(object):
 	FeatureActionID = 'null'
 	SamplingFeatureID = 'null'
 	ActionID = 'null'
-	# def __init__(self):
-	
-	
+	def __init__(self,id):
+		self.FeatureActionID = id
+		self.SamplingFeatureID = id
+		self.ActionID = id
+
 class Results_TimeSeriesResultValue(object):
 	ValueID = 'null' #Not Null
 	ResultID = 'null' #Not Null
@@ -333,20 +322,6 @@ class Core_Result(object):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ############# migrate_db
 sqlite_file2 = '../ODM2_hampt_rd_data.sqlite'
 conn2 = sqlite3.connect(sqlite_file2)
@@ -370,6 +345,7 @@ def migrate_site(site):
 	c2.execute("INSERT INTO SamplingFeatures VALUES ({id}, '{uid}', '{tp}', '{cd}', '{nm}', '{ds}', '{gt}', '{gm}', '{gmw}', '{em}', '{ed}')".format(id=s2.SamplingFeatureID, uid=s2.SamplingFeatureUUID, tp=s2.SamplingFeatureTypeCV, cd=s2.SamplingFeatureCode, nm=s2.SamplingFeatureName, ds=s2.SamplingFeatureDescription, gt=s2.FeatureGeometry, gm=s2.FeatureGeometry ,gmw=s2.FeatureGeometryWKT, em=s2.Elevation_m, ed=s2.ElevationDatumCV))
 	conn2.commit()
 	migrate_Action(site)
+	migrate_FeatureAction(site.SiteID)
 	return
 
 def migrate_Action(site):
@@ -378,6 +354,13 @@ def migrate_Action(site):
 	c2.execute("INSERT INTO Actions Values ({id}, '{cv}', {mid}, '{bdt}', '{bos}', '{edt}', '{eod}', '{ad}', '{afl}')".format(id=a.ActionID, cv=a.ActionTypeCV, mid=a.MethodID, bdt=a.BeginDateTime, bos=a.BeginDateTimeUTCOffset, edt=a.EndDateTime, eod=a.EndDateTimeUTCOffset, ad=a.ActionDescription, afl=a.ActionFileLink))
 	conn2.commit()
 	print"migrate action completed"
+	return
+
+def migrate_FeatureAction(id):
+	fa = Core_FeatureAction(id)
+	c2.execute("INSERT INTO FeatureActions Values ({fid}, {sfid}, {aid})".format(fid=fa.FeatureActionID, sfid=fa.SamplingFeatureID, aid=fa.ActionID))
+	conn2.commit()
+	print "migrate_FeatureAction complete"
 	return
 
 def migrate_variable(var):
@@ -427,18 +410,6 @@ def Method_setup():
 	for method in methods:
 		c2.execute("INSERT INTO Methods VALUES ({id}, '{cv}', '{cd}', '{nm}', '{ds}', '{ln}', {org})".format(id=method.MethodID, cv=method.MethodTypeCV, cd=method.MethodCode, nm=method.MethodName, ds=method.MethodDescription, org=method.OrganizationID, ln=method.MethodLink))
 	conn2.commit()
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
