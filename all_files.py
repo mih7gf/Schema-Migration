@@ -319,7 +319,12 @@ class Results_TimeSeriesResult(object):
 	ZLocation = 'null'
 	ZLocationUnitsID = 'null'
 	SpatialReferenceID = 'null' #Not Null
-	# def __init__(self):
+	IntendedTimeSpacing = 'null'
+	IntendedTimeSpacingUnitsID = 'null'
+	AggregationStatisticCV = 'null'
+	def __init__(self, dval):
+		self.ResultID = dval.ValueID
+		self.AggregationStatisticCV = 'Unknown'
 
 class Results_TimeSeriesResultValue(object):
 	ValueID = 'null' #Not Null
@@ -357,6 +362,8 @@ c2 = conn2.cursor()
 
 def migrate_datavalue(dval):
 	migrate_Results(dval)
+	migrate_TimeSeriesResults(dval)
+	migrate_TimeSeriesResultValues(dval)
 	# conn2.commit()
 	return
 
@@ -392,16 +399,19 @@ def migrate_FeatureAction(id):
 	return
 
 def migrate_Results(dval):
-	# print "migrating result", dval.ValueID
 	cr = Core_Result(dval)
-	# print cr.ResultID, cr.ResultUUID, cr.FeatureActionID, cr.ResultTypeCV, cr.VariableID, cr.UnitsID, cr.TaxonomicClassifierID, cr.ProcessingLevelID, cr.ResultDateTime, cr.ResultDateTimeUTCOffset, cr.ValidDateTime, cr.ValidDateTimeUTCOffset, cr.StatusCV, cr.SampledMedium, cr.ValueCount
-
-	# c2.execute("INSE")
 	c2.execute("INSERT INTO Results VALUES ({rid}, '{ruid}', {fid}, '{rcv}', {vid}, {uid}, {tx}, {plid}, '{rdt}', {ruo}, '{vdt}', {vos}, '{scv}', '{smcv}', {vc})".format(rid=cr.ResultID, ruid=cr.ResultUUID, fid=cr.FeatureActionID, rcv=cr.ResultTypeCV, vid=cr.VariableID, uid=cr.UnitsID, tx=cr.TaxonomicClassifierID, plid=cr.ProcessingLevelID, rdt=cr.ResultDateTime, ruo=cr.ResultDateTimeUTCOffset, vdt=cr.ValidDateTime, vos=cr.ValidDateTimeUTCOffset, scv=cr.StatusCV, smcv=cr.SampledMedium, vc=cr.ValueCount))
-	# print cr.ResultID,"commit complete"
-	# conn2.commit()
-
 	return
+
+def migrate_TimeSeriesResults(dval):
+	tsr = Results_TimeSeriesResult(dval)
+	c2.execute("INSERT INTO TimeSeriesResults VALUES ({rid}, {x}, {xid}, {y}, {yid}, {z}, {zid}, {sid}, {it}, {itid}, '{acv}')".format(rid=tsr.ResultID, x=tsr.XLocation, xid=tsr.XLocationUnitsID, y=tsr.YLocation, yid=tsr.YLocationUnitsID, z=tsr.ZLocation, zid=tsr.ZLocationUnitsID, sid=tsr.SpatialReferenceID, it=tsr.IntendedTimeSpacing, itid=tsr.IntendedTimeSpacingUnitsID, acv=tsr.AggregationStatisticCV))
+	return
+
+def migrate_TimeSeriesResultValues(dval):
+	return
+
+
 
 def migrate_variable(var):
 	v = Core_Variable(var)
