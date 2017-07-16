@@ -11,7 +11,8 @@ tables = [ #[table_name, pk_column_name]
 ]
 
 start_end = []
-
+variable_info = []
+unit_id = {'in':1, 'degrees':2, 'mph':3, 'ft':4}
 
 
 
@@ -271,28 +272,7 @@ class Core_FeatureAction(object):
 		self.SamplingFeatureID = id
 		self.ActionID = id
 
-class Results_TimeSeriesResultValue(object):
-	ValueID = 'null' #Not Null
-	ResultID = 'null' #Not Null
-	DataValue = 'null' #Not Null
-	ValueDateTime = 'null' #Not Null
-	ValueDateTimeUTCOffset = 'null' #Not Null
-	CensorCorCV = 'null' #Not Null
-	TimeAggregationInterval = 'null' #Not Null
-	TimeAggregationIntervalUnitsID = 'null' #Not Null
-	# def __init__(self):
-	
-class Results_TimeSeriesResult(object):
-	ResultID = 'null' #Not Null
-	XLocation = 'null'
-	XLocationUnitsID = 'null'
-	YLocation = 'null'
-	YLocationUnitsID = 'null'
-	ZLocation = 'null'
-	ZLocationUnitsID = 'null'
-	SpatialReferenceID = 'null' #Not Null
-	# def __init__(self):
-	
+
 class Core_Result(object):
 	ResultID = 'null' #Not Null
 	ResultUUID = 'null' #Not Null
@@ -309,6 +289,53 @@ class Core_Result(object):
 	StatusCV = 'null'
 	SampledMedium = 'null' #Not Null
 	ValueCount = 'null' #Not Null
+	def __init__(self, dval):
+		self.ResultID = dval.ValueID
+		self.ResultUUID = dval.ValueID
+		self.FeatureActionID = dval.SiteID
+		self.ResultTypeCV = "Time Series Coverage"
+		self.VariableID = dval.VariableID
+		self.UnitsID = unit_id[variable_info[dval.VariableID][1]]
+		# self.TaxonomicClassifierID = 
+		self.ProcessingLevelID = ProcLevelID_check(dval.QCID)
+		self.ResultDateTime = dval.Datetime
+		self.ResultDateTimeUTCOffset = -5
+		# self.ValidDateTime
+		# self.ValidDateTimeUTCOffset
+		# self.StatusCV
+		self.SampledMedium = 'water'
+		self.ValueCount = 1
+
+def ProcLevelID_check(ID):
+	if(ID==None):  return -1
+	return ID
+
+class Results_TimeSeriesResult(object):
+	ResultID = 'null' #Not Null
+	XLocation = 'null'
+	XLocationUnitsID = 'null'
+	YLocation = 'null'
+	YLocationUnitsID = 'null'
+	ZLocation = 'null'
+	ZLocationUnitsID = 'null'
+	SpatialReferenceID = 'null' #Not Null
+	# def __init__(self):
+
+class Results_TimeSeriesResultValue(object):
+	ValueID = 'null' #Not Null
+	ResultID = 'null' #Not Null
+	DataValue = 'null' #Not Null
+	ValueDateTime = 'null' #Not Null
+	ValueDateTimeUTCOffset = 'null' #Not Null
+	CensorCorCV = 'null' #Not Null
+	TimeAggregationInterval = 'null' #Not Null
+	TimeAggregationIntervalUnitsID = 'null' #Not Null
+	# def __init__(self,dval):
+	# 	self.ValueID = dval.ValueID
+		# self.ResultID
+
+	
+
 
 
 
@@ -329,7 +356,8 @@ c2 = conn2.cursor()
 
 
 def migrate_datavalue(dval):
-	
+	migrate_Results(dval)
+	# conn2.commit()
 	return
 
 def migrate_QCL(QCL):
@@ -361,6 +389,18 @@ def migrate_FeatureAction(id):
 	c2.execute("INSERT INTO FeatureActions Values ({fid}, {sfid}, {aid})".format(fid=fa.FeatureActionID, sfid=fa.SamplingFeatureID, aid=fa.ActionID))
 	conn2.commit()
 	print "migrate_FeatureAction complete"
+	return
+
+def migrate_Results(dval):
+	# print "migrating result", dval.ValueID
+	cr = Core_Result(dval)
+	# print cr.ResultID, cr.ResultUUID, cr.FeatureActionID, cr.ResultTypeCV, cr.VariableID, cr.UnitsID, cr.TaxonomicClassifierID, cr.ProcessingLevelID, cr.ResultDateTime, cr.ResultDateTimeUTCOffset, cr.ValidDateTime, cr.ValidDateTimeUTCOffset, cr.StatusCV, cr.SampledMedium, cr.ValueCount
+
+	# c2.execute("INSE")
+	c2.execute("INSERT INTO Results VALUES ({rid}, '{ruid}', {fid}, '{rcv}', {vid}, {uid}, {tx}, {plid}, '{rdt}', {ruo}, '{vdt}', {vos}, '{scv}', '{smcv}', {vc})".format(rid=cr.ResultID, ruid=cr.ResultUUID, fid=cr.FeatureActionID, rcv=cr.ResultTypeCV, vid=cr.VariableID, uid=cr.UnitsID, tx=cr.TaxonomicClassifierID, plid=cr.ProcessingLevelID, rdt=cr.ResultDateTime, ruo=cr.ResultDateTimeUTCOffset, vdt=cr.ValidDateTime, vos=cr.ValidDateTimeUTCOffset, scv=cr.StatusCV, smcv=cr.SampledMedium, vc=cr.ValueCount))
+	# print cr.ResultID,"commit complete"
+	# conn2.commit()
+
 	return
 
 def migrate_variable(var):
@@ -456,6 +496,17 @@ def start_end_datetime_setup():
 		file = csv.reader(csvfile, delimiter=',', quotechar='|')
 		for row in file:
 			start_end.append(row)
+	print 'start_end_datetime_setup'
+
+def variable_info_setup():
+	variable_info.append(['null','null','null'])
+	with open('variable_info.csv', 'rb') as csvfile:
+		file = csv.reader(csvfile, delimiter=',', quotechar='|')
+		for row in file:
+			variable_info.append(row)
+	for l in variable_info:
+		print l
+	print "variable_info_setup"
 
 def parse_small_tables():
 	print "Fetching QCL..."
@@ -484,6 +535,7 @@ def parse_small_tables():
 	for row in variable_rows:
 		# variable_objs.append(Variable(row))
 		v = Variable(row)
+		print v.VariableID,',',v.Units,',',v.TimeSupport
 		migrate_variable(v)
 	print "Done\n"
 	conn2.commit()
@@ -495,7 +547,10 @@ def buffered_parse_large_table():
 	num_rows = int(c.execute('SELECT * FROM {tn} ORDER BY ROWID DESC LIMIT 1'.format(tn=tables[0][0])).fetchone()[0])
 	# num_rows = 25000000
 	buffer_size = 100000
+	# buffer_size = 10000
+	# buffer_size = 10
 	start = 1
+
 	print "Fetching & Migrating Datavalues..."
 
 	while start < num_rows+1:
@@ -510,6 +565,7 @@ def buffered_parse_large_table():
 		for row in rows:
 			# dval_objs.append(Datavalue(row))
 			migrate_datavalue(Datavalue(row))
+		conn2.commit()
 		print start,"to",end,"("+str(100*end/num_rows)+"%) : Done"
 		start = end
 
@@ -524,6 +580,7 @@ def buffered_parse_large_table():
 # site_objs = []
 # variable_objs = []
 start_end_datetime_setup()
+variable_info_setup()
 Spatial_Reference_setup()#-
 print "done sp_ref_setup"
 CV_SiteType_setup()#-
@@ -535,7 +592,7 @@ print "done unit_setup"
 Method_setup()
 print "done Method_setup"
 parse_small_tables()
-#- buffered_parse_large_table()
+buffered_parse_large_table()
 
 print "\nMigration Complete"
 conn.close()
