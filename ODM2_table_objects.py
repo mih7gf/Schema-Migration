@@ -1,4 +1,9 @@
-from ODM1_table_objects import *
+# import sqlite3, csv
+# from parse_db import *
+# from migrate_db import *
+# from ODM1_table_objects import *
+# # from ODM2_table_objects import *
+import parse_db as p
 
 class Core_ProcessingLevel(object):
 	ProcessingLevelID = 0
@@ -147,10 +152,10 @@ class Core_Action(object):
 		self.ActionID = site.SiteID
 		self.ActionTypeCV = "Observation"
 		self.MethodID = method_id(site.SiteID)
-		self.BeginDateTime = "a"
-		self.BeginDateTimeUTCOffset = "b"
-		self.EndDateTime = "c"
-		self.EndDateTimeUTCOffset = "d"
+		self.BeginDateTime = p.start_end[site.SiteID][1]
+		self.BeginDateTimeUTCOffset = -5
+		self.EndDateTime = p.start_end[site.SiteID][2]
+		self.EndDateTimeUTCOffset = -5
 def method_id(s):
 	if(s==22): #WU
 		return 3
@@ -165,31 +170,12 @@ class Core_FeatureAction(object):
 	FeatureActionID = 'null'
 	SamplingFeatureID = 'null'
 	ActionID = 'null'
-	# def __init__(self):
-	
-	
-class Results_TimeSeriesResultValue(object):
-	ValueID = 'null' #Not Null
-	ResultID = 'null' #Not Null
-	DataValue = 'null' #Not Null
-	ValueDateTime = 'null' #Not Null
-	ValueDateTimeUTCOffset = 'null' #Not Null
-	CensorCorCV = 'null' #Not Null
-	TimeAggregationInterval = 'null' #Not Null
-	TimeAggregationIntervalUnitsID = 'null' #Not Null
-	# def __init__(self):
-	
-class Results_TimeSeriesResult(object):
-	ResultID = 'null' #Not Null
-	XLocation = 'null'
-	XLocationUnitsID = 'null'
-	YLocation = 'null'
-	YLocationUnitsID = 'null'
-	ZLocation = 'null'
-	ZLocationUnitsID = 'null'
-	SpatialReferenceID = 'null' #Not Null
-	# def __init__(self):
-	
+	def __init__(self,id):
+		self.FeatureActionID = id
+		self.SamplingFeatureID = id
+		self.ActionID = id
+
+
 class Core_Result(object):
 	ResultID = 'null' #Not Null
 	ResultUUID = 'null' #Not Null
@@ -206,5 +192,63 @@ class Core_Result(object):
 	StatusCV = 'null'
 	SampledMedium = 'null' #Not Null
 	ValueCount = 'null' #Not Null
-	# def __init__(self):
-	#kdjfkdj
+	def __init__(self, dval):
+		self.ResultID = dval.ValueID
+		self.ResultUUID = dval.ValueID
+		self.FeatureActionID = dval.SiteID
+		self.ResultTypeCV = "Time Series Coverage"
+		self.VariableID = dval.VariableID
+		self.UnitsID = p.unit_id[p.variable_info[dval.VariableID][1]]
+		# self.TaxonomicClassifierID = 
+		self.ProcessingLevelID = ProcLevelID_check(dval.QCID)
+		self.ResultDateTime = dval.Datetime
+		self.ResultDateTimeUTCOffset = -5
+		# self.ValidDateTime
+		# self.ValidDateTimeUTCOffset
+		# self.StatusCV
+		self.SampledMedium = 'water'
+		self.ValueCount = 1
+
+def ProcLevelID_check(ID):
+	if(ID==None):  return -1
+	return ID
+
+class Results_TimeSeriesResult(object):
+	ResultID = 'null' #Not Null
+	XLocation = 'null'
+	XLocationUnitsID = 'null'
+	YLocation = 'null'
+	YLocationUnitsID = 'null'
+	ZLocation = 'null'
+	ZLocationUnitsID = 'null'
+	SpatialReferenceID = 'null' #Not Null
+	IntendedTimeSpacing = 'null'
+	IntendedTimeSpacingUnitsID = 'null'
+	AggregationStatisticCV = 'null'
+	def __init__(self, dval):
+		self.ResultID = dval.ValueID
+		self.AggregationStatisticCV = 'Unknown'
+
+class Results_TimeSeriesResultValue(object):
+	ValueID = 'null' #Not Null
+	ResultID = 'null' #Not Null
+	DataValue = 'null' #Not Null
+	ValueDateTime = 'null' #Not Null
+	ValueDateTimeUTCOffset = 'null' #Not Null
+	CensorCodeCV = 'null' #Not Null
+	QualityCodeCV = 'null' #Not Null
+	TimeAggregationInterval = 'null' #Not Null
+	TimeAggregationIntervalUnitsID = 'null' #Not Null
+	def __init__(self,dval):
+		self.ValueID = dval.ValueID
+		self.ResultID = dval.ValueID
+		self.DataValue = Value_NotNull(dval.Value)
+		self.ValueDateTime = dval.Datetime
+		self.ValueDateTimeUTCOffset = -5
+		self.CensorCodeCV = -1
+		self.QualityCodeCV = -1
+		self.TimeAggregationInterval = p.variable_info[dval.VariableID][2]
+		self.TimeAggregationIntervalUnitsID = 5
+def Value_NotNull(v):
+	if(v==None):  return -1
+	return v	
