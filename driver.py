@@ -19,7 +19,5 @@ p.buffered_parse_large_table()
 
 print "\nMigration Complete"
 
-conn.close()
+p.conn.close()
 m.conn2.close()
-
-
