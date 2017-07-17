@@ -1,18 +1,5 @@
-# import sqlite3, csv
-# import ODM1_table_objects as ODM1
-# import ODM2_table_objects as ODM2
 import migrate_db as m
 import parse_db as p
-
-
-
-	
-
-
-
-
-
-
 
 
 m.start_end_datetime_setup()
@@ -31,5 +18,8 @@ p.parse_small_tables()
 p.buffered_parse_large_table()
 
 print "\nMigration Complete"
+
 conn.close()
 m.conn2.close()
+
+

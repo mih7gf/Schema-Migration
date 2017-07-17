@@ -2,11 +2,6 @@ import sqlite3
 from parse_db import *
 import ODM2_table_objects as ODM2
 
-# from parse_db import *
-# from migrate_db import *
-# from ODM1_table_objects import *
-# from ODM2_table_objects import *
-
 
 sqlite_file2 = '../ODM2_hampt_rd_data.sqlite'
 conn2 = sqlite3.connect(sqlite_file2)

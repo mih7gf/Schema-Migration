@@ -3,11 +3,6 @@ import ODM1_table_objects as ODM1
 import migrate_db as m
 
 
-# from parse_db import *
-# from migrate_db import *
-# from ODM1_table_objects import *
-# from ODM2_table_objects import *
-
 start_end = []
 variable_info = []
 unit_id = {'in':1, 'degrees':2, 'mph':3, 'ft':4}
