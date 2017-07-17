@@ -332,12 +332,23 @@ class Results_TimeSeriesResultValue(object):
 	DataValue = 'null' #Not Null
 	ValueDateTime = 'null' #Not Null
 	ValueDateTimeUTCOffset = 'null' #Not Null
-	CensorCorCV = 'null' #Not Null
+	CensorCodeCV = 'null' #Not Null
+	QualityCodeCV = 'null' #Not Null
 	TimeAggregationInterval = 'null' #Not Null
 	TimeAggregationIntervalUnitsID = 'null' #Not Null
-	# def __init__(self,dval):
-	# 	self.ValueID = dval.ValueID
-		# self.ResultID
+	def __init__(self,dval):
+		self.ValueID = dval.ValueID
+		self.ResultID = dval.ValueID
+		self.DataValue = Value_NotNull(dval.Value)
+		self.ValueDateTime = dval.Datetime
+		self.ValueDateTimeUTCOffset = -5
+		self.CensorCodeCV = -1
+		self.QualityCodeCV = -1
+		self.TimeAggregationInterval = variable_info[dval.VariableID][2]
+		self.TimeAggregationIntervalUnitsID = 5
+def Value_NotNull(v):
+	if(v==None):  return -1
+	return v	
 
 	
 
@@ -409,9 +420,9 @@ def migrate_TimeSeriesResults(dval):
 	return
 
 def migrate_TimeSeriesResultValues(dval):
+	tr = Results_TimeSeriesResultValue(dval)
+	c2.execute("INSERT INTO TimeSeriesResultValues VALUES ({vid}, {rid}, {dv}, '{vdt}', {vos}, {ccv}, {qcv}, {tai}, {taid})".format(vid=tr.ValueID, rid=tr.ResultID, dv=tr.DataValue, vdt=tr.ValueDateTime, vos=tr.ValueDateTimeUTCOffset, ccv=tr.CensorCodeCV, qcv=tr.QualityCodeCV, tai=tr.TimeAggregationInterval, taid=tr.TimeAggregationIntervalUnitsID))
 	return
-
-
 
 def migrate_variable(var):
 	v = Core_Variable(var)
@@ -446,7 +457,8 @@ def Unit_setup():
 	u2 = Unit(2, 'Temperature', 'deg', 'degrees')
 	u3 = Unit(3, 'Speed', 'mph', 'miles per hour')
 	u4 = Unit(4, 'Length', 'ft', 'feet')
-	units = [u1, u2, u3, u4]
+	u5 = Unit(5, 'Time', 'sec', 'seconds')
+	units = [u1, u2, u3, u4, u5]
 	for unit in units:
 		c2.execute("INSERT INTO Units VALUES ({id}, '{cv}', '{ab}', '{nm}', '{lk}')".format(id=unit.UnitID, cv=unit.UnitTypeCV, ab=unit.UnitAbbreviation, nm=unit.UnitAbbreviation, lk=unit.UnitLink))
 	conn2.commit()
